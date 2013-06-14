@@ -1,0 +1,565 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+    <link href="uq.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+    <script>
+        /* Fix for missing .keys property on Objects in some browsers. */
+        if (!Object.keys) {
+          Object.keys = (function () {
+            var hasOwnProperty = Object.prototype.hasOwnProperty,
+                hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
+                dontEnums = [
+                  'toString',
+                  'toLocaleString',
+                  'valueOf',
+                  'hasOwnProperty',
+                  'isPrototypeOf',
+                  'propertyIsEnumerable',
+                  'constructor'
+                ],
+                dontEnumsLength = dontEnums.length
+
+            return function (obj) {
+              if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null) throw new TypeError('Object.keys called on non-object')
+
+              var result = []
+
+              for (var prop in obj) {
+                if (hasOwnProperty.call(obj, prop)) result.push(prop)
+              }
+
+              if (hasDontEnumBug) {
+                for (var i=0; i < dontEnumsLength; i++) {
+                  if (hasOwnProperty.call(obj, dontEnums[i])) result.push(dontEnums[i])
+                }
+              }
+              return result
+            }
+          })()
+        };
+
+        /* Extract the condition number from the URL. Condition
+           number must be in the set {1,2,3,4}. */
+        var parsed = document.URL.match(/\/([1234])\.html/);
+        var CONDITION = Number(parsed[1]);
+        document.title = 'MGTS1601-' + CONDITION;
+    </script>
+
+    <script data-main="scripts/main" src="//cdnjs.cloudflare.com/ajax/libs/require-jquery/0.25.0/require-jquery.min.js"></script>
+
+    <!-- Each slide "type" has it's own html template. There's a corresponding method
+         on the Slide object (scripts/Slide.js) for each template. This method implements
+         the dynamic features of that slide. -->
+    <script id="survey-options-template" type="text/x-jquery-html">
+    </script>
+
+    <script id="business_case_question-template" type="text/x-jquery-html">
+        <div class="row">
+            <div class="span10">
+                <div class="row">
+                    <div class="span8 slide-title">{{=title}}</div>
+                </div>
+                <div class="row">
+                    <div class="business-case-question-text span8">
+                        
+                        <form>
+                            <label for="{{=name}}_choices" class="hidden error">Please select an answer before pressing continue.</label>
+                        <div>
+                            {{=question}}<hr>
+                        </div>
+                        {{#each answers}}
+                            <div>
+                                {{=label}}.
+                                    <input name="{{=$view.parent.parent.data.name}}_choices" id="{{=$view.parent.parent.data.name}}_choice_{{=$itemNumber}}" class="required" type="radio"/>
+                                {{=answer}}
+                            </div>
+                            <hr>
+                        {{/each}}
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span8">
+                        <div class="time-limit-alert">
+                        </div></br></br>
+                    </div>
+                </div>
+            </div>
+            <div class="span2">
+                {{=chatWindow!}}
+            </div>
+        </div>
+ 
+    </script>
+
+    <script id="business_case-template" type="text/x-jquery-html">
+        <div class="row">
+            <div class="span10">
+                <div class="row">
+                    <div class="span8 slide-title">{{=title}}</div>
+                </div>
+                <div class="row">
+                    <div class="span8">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span8 business-case-content">
+                        {{=textcontent!}}
+                        {{=content!}}
+                    </div>
+                </div>
+            </div>
+            <div class="span2">
+                {{=chatWindow!}}
+            </div>
+        </div>
+
+    </script>
+    <script id="internal_score_tasks-template" type="text/x-jquery-html">
+        <div class="row">
+            <div class="span10">
+                <div class="row">
+                    <div class="span8 slide-title">{{=title}}</div>
+                </div>
+                <div class="row">
+                    <div class="span8">
+                        <table class="table table-striped" id="internalScoreTasksTable">
+                            <tr>
+                                <th>Rank</th>
+                                <th>Participant</th>
+                                <th>Score</th>
+                                <th>Percent</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="span2">
+                {{=chatWindow!}}
+            </div>
+        </div>
+    </script>
+
+    <script id="group_score-template" type="text/x-jquery-html">
+        <div class="row">
+            <div class="span10">
+                <div class="row">
+                    <div class="span8 slide-title">{{=title}}</div>
+                </div>
+                <div class="row">
+                    <div class="span8">
+                        <table class="table table-striped" id="groupScoreTable">
+                            <tr>
+                                <th>Rank</th>
+                                <th>Team</th>
+                                <th>Team Average</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="span8 simple-text-content-content slide-title">{{=textcontent!}}</div>
+                </div>
+            </div>
+            <div class="span2">
+                {{=chatWindow!}}
+            </div>
+        </div>
+    </script>
+
+
+    <script id="team_introduction-template" type="text/x-jquery-html">
+        <div class="row">
+            <div class="span10">
+                <div class="row">
+                    <div class="span8 slide-title">Team D Introduction</div>
+                </div>
+                <div class="row">
+                    <div class="span8 simple-text-content-content"><p>Welcome, these are your team members. Please introduce yourself using the chat function on the side panel.</p></div><br><br>
+                </div>
+                <div class="row">
+                    <div class="span8">
+                        <table class="table table-striped" id="teamIntroductionTable">
+                            <tr>
+                                <th>Name</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Major</th>
+                                <th>Expected GPA</th>
+                                <th>Puzzle Task Score</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row hidden">
+                    <div class="span8 simple-text-content-content"><hr>{{=textcontent!}}</div>
+                </div>
+            </div>
+            <div class="span2">
+                {{=chatWindow!}}
+            </div>
+        </div>
+    </script>
+
+    <script id="chat-box-template" type="text/x-jquery-html">
+        <div class="chat-box">
+            <div class="chat-box-header">
+                    <h2>Team Chat</h2>
+            </div>
+
+            <div class="chat-box-scroll-container">
+            <table cellspacing="0" cellpadding="0" class="chat-box-table"><tr><td class="chat-box-outer-container"></td></tr></table>
+            </div>
+
+            <div>
+            <textarea class="chat-box-textarea" placeholder="Type in your message here and press Enter to submit..." rows="4"></textarea>
+            </div>
+        </div>
+    </script>
+
+    <script id="team_request_results-template" type="text/x-jquery-html">
+        <div class="row">
+            <div class="span12 slide-title">Your Team Request Score</div>
+        </div>
+        <div class="row">
+            <div class="span8 offset4 loading">Wait to see who wants you in their team.
+            </div>
+        </div>
+        <div class="row">
+            <div class="span1 offset6 center">
+                <div class="loading spinner"></div>
+            </div>
+        </div>
+        <div class="row hidden">
+            <div class="offset2 span8">
+                <table class="table table-striped" id="teamRequestResultsTable">
+                    <tr>
+                        <th>Preference</th>
+                        <th>Number of Request</th>
+                        <th>Participants</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row hidden">
+            <div class="text-content offset2 span8 center">
+            <div id='teamRequestResultsMessage'>
+                {{=message!}}
+            </div>
+            </div>
+        </div>
+
+    </script>
+
+    <script id="team_mate_selection-template" type="text/x-jquery-html">
+        <div class="row">
+            <div class="span12 slide-title">{{=title!}}</div>
+        </div>
+        <div class="row">
+            <div class="span12 loading center">Please wait while other participants to complete their multiple choice questions and author their pitches.
+            </div>
+        </div>
+        <div class="row">
+            <div class="span1 offset6 center">
+                <div class="loading spinner"></div>
+            </div>
+        </div>
+        <div class="row notloading">
+            <div class="span12 simple-text-content-content">{{=textcontent!}}</div>
+        </div>
+        <div class="row">
+            <div class="span4 offset4 center">
+                <br/>
+                <a href="#" class="btn btn-danger" id="resetTeammateSelection">Reset Preferences</a><br/>
+                <br/>
+            </div>
+        </div>
+        <div class="row notloading">
+            <div class="span12">
+                <table class="table table-striped" id="teammateSelectionTable">
+                    <tr>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Age</th>
+                        <th>Major</th>
+                        <th>Expected GPA</th>
+                        <th>Puzzle Task Score</th>
+                        <th>Pitch</th>
+                        <th>Preference</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </script>
+
+
+    <script id="task_performance_scores-template" type="text/x-jquery-html">
+        <div class="row">
+            <div class="span12 slide-title">{{=title}}</div>
+        </div>
+        <div class="row">
+            <div class="span8 offset4 loading">Please wait until all scores are displayed in the table below:
+            </div>
+        </div>
+        <div class="row">
+            <div class="span1 offset6 center">
+                <div class="loading spinner"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="hidden text-content">
+                <p>{{=textcontent!}}</p>
+            </div>
+            <table class="table table-striped hidden" id="{{=tableid}}">
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="span12 hidden center easy-text">
+                <div class="green-text">
+                    <p>CONGRATULATIONS</p>
+                    <p>YOU GOT A SCORE OF {{=scoreobtained}}/{{=scoretotal}}</p>
+                    <p>WELL DONE!!!</p>
+                </div>
+                <br>
+                <p>Please continue to the next page.</p>
+            </div>
+        </div>
+    </script>
+
+    <script id="survey-template" type="text/x-jquery-tmpl">
+        <div class="row">
+            <div class="span12 slide-title">{{=title}}</div>
+        </div>
+        <div class="row">
+            <table class="table table-striped" id="{{=tableid}}"></table>
+        </div>
+    </script>
+    <script id="personal_information-template" type="text/x-jquery-tmpl">
+        <div class="row">
+            <div class="span12 slide-title">Personal Information</div>
+        </div>
+        <div class="row">
+            <div class="simple-text-content-content span12">
+                Please provide the following information about yourself:<br><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <form class="form-horizontal" id="personalInformation">
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="pi-firstname">First Name</label>
+                            <div class="controls">
+                                <input type="text" class="required input-xlarge" id="pi-firstname" name="firstname">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="pi-surname">Surname</label>
+                            <div class="controls">
+                                <input type="text" class="required input-xlarge" id="pi-surname" name="surname">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="pi-age">Age</label>
+                            <div class="controls">
+                                <input type="text" class="input-xlarge required" id="pi-age" name="age">
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="pi-major">Degree / Program Major</label>
+                            <div class="controls">
+                                <input type="text" class="input-xlarge required" id="pi-major" name="major">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Gender</label>
+                            <div class="controls">
+                                <label for="genderRadios" class="hidden error">This field is required.</label>
+                                <label class="radio" for="genderMale">
+                                    <input type="radio" name="gender" id="genderMale" value="M" class="required">
+                                    Male
+                                </label>
+                                <label class="radio" for="genderFemale">
+                                    <input type="radio" name="gender" id="genderFemale" value="F">
+                                    Female
+                                </label>
+
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">GPA Goal for Degree</label>
+                            <div class="controls">
+                                <label for="gpaRadios" class="hidden error">This field is required.</label>
+                                <label class="radio" for="gpa4">
+                                    <input type="radio" name="expectedGPA" id="gpa4", value="4" class="required">
+                                    4
+                                </label>
+                                <label class="radio" for="gpa5">
+                                    <input type="radio" name="expectedGPA" id="gpa5", value="5">
+                                    5
+                                </label>
+                                <label class="radio" for="gpa6">
+                                    <input type="radio" name="expectedGPA" id="gpa6", value="6">
+                                    6
+                                </label>
+                                <label class="radio" for="gpa7">
+                                    <input type="radio" name="expectedGPA" id="gpa7", value="7">
+                                    7
+                                </label>
+                                <p class="help-block">What GPA do you think will be realistically achievable for you?</p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Please tick if you of Torres Strait or Aboriginal decent.</label>
+                            <div class="controls">
+                                <input type="checkbox" id="pi-torres" name="aboriginal">
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </script>
+
+    <script id="second_saliva-template" type="text/x-jquery-tmpl">
+        <div class="row">
+            <div class="span12 slide-title">{{=title!}}</div>
+        </div>
+        <div class="row">
+            <div class="simple-text-content-content span12">
+                {{=textcontent!}}
+                <hr>
+                <div class="center">
+                    Tube Number: <strong><span id='secondSalivaUserid'/></strong>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </script>
+
+
+    <script id="saliva_collection-template" type="text/x-jquery-tmpl">
+        <div class="row">
+            <div class="span12 slide-title">Saliva Sample</div>
+        </div>
+        <div class="row">
+            <div class="simple-text-content-content span12">
+		<div>
+		{{=textcontent!}}
+		</div>
+                <div class="center">
+                    <form onSubmit="" class="form-horizontal" id="pretestSaliva">
+                        <fieldset>
+                            <input class="span3 required" type="text" placeholder="Number on PRETEST.1 tube" name="UserId">
+                        </fieldset>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </script>
+
+    <script id="selection_justification-template" type="text/x-jquery-tmpl">
+        <div class="row">
+            <div class="span12 slide-title">{{=title!}}</div>
+        </div>
+        <div class="row">
+            <div class="simple-text-content-content span12">
+                <p>Please write below ONE short statement describing why you would be a good team member, this is to convince the other students that they should select you for their team</p>
+                <div class="center">
+                    <form class="form-horizontal">
+                        <input id="pitchMessage" class="span5" type="text" placeholder="One short statement.">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+    <script id="simple-text-content-template" type="text/x-jquery-tmpl">
+        <div class="row">
+            <div class="span12 slide-title">{{=title}}</div>
+        </div>
+        <div class="row">
+            <div class="span12 simple-text-content-content">
+                {{nlToBr textcontent}}
+            </div>
+        </div>
+    </script>
+
+    <script id="multi_choice_question-template" type="text/x-jquery-tmpl">
+        <div class="row">
+            <div class="span12 slide-title">{{=title}}</div>
+        </div>
+        <div class="row">
+            <div class="span12 multi-choice-question-content">
+                {{=richcontenttop!}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="span8 multi-choice-question-content">
+                {{=richcontentleft!}}
+            </div>
+
+            <div class="span4 multi-choice-question-choices">
+                <form>
+                    <div class="controls">
+                        <br><br>
+                        <fieldset>
+                            <label for="{{=name}}_choices" class="hidden error">Please select an option.</label>
+                            {{#each answers}}
+                                <label for="{{=$view.parent.parent.data.name}}_choice_{{=$itemNumber}}" class="radio align-left">{{=label}}<input name="{{=$view.parent.parent.data.name}}_choices" id="{{=$view.parent.parent.data.name}}_choice_{{=$itemNumber}}" class="required" type="radio"/>
+                                </label>
+                            {{/each}}
+                        </fieldset>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span8">
+                <div class="time-limit-alert">
+                </div></br></br>
+            </div>
+        </div>
+
+    </script>
+
+    <!-- UQ Header at top of page. -->
+    <div id="header">
+        <div id="header-inner">
+            <h1><span/></h1>
+        </div>
+        <div id="header-timer">
+            <div>
+                <strong>Time remaining</strong> (minutes):
+            </div>
+            <div class="center" id="time-remaining">
+                15:00
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="content"></div>
+        <div class="row">
+            <div class="span4 offset4 center">
+                <a href="#" id="nextSlide" class="btn btn-large btn-primary">Continue</i></a>
+                <a href="#" id="acceptButton" class="btn btn-large btn-success">Accept</i></a>
+            </div>
+            <div class="span4 right">
+                <a href="#" id="declineButton" class="btn btn-small btn-danger">Decline</i></a>
+            </div>
+        </div>
+    </div>
+    <div id="footer-padding"></div>
+</body>
+</html>

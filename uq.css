@@ -1,0 +1,271 @@
+
+#header {
+    background: #602290 url('images/bodybg.gif') repeat-x scroll 0 0;
+    height: 100px;
+    padding: 0;
+    margin: 0;
+}
+
+#footer-padding {
+    height: 50px;
+}
+
+.spinner {
+    background: transparent url('images/ajax-loader.gif') no-repeat scroll 0 0;
+    display: block;
+    height: 32px;
+    width: 32px;
+    margin: 10px 10px 10px 10px;
+}
+
+#header-inner {
+    margin: 0;
+    padding: 0;
+}
+
+#header-inner h1 {
+    margin: 26px 0 0 25px;
+    text-indent: -9999px;
+    position: absolute;
+}
+
+#header-inner h1 span {
+    background: transparent url('images/masthead-logo.gif') no-repeat scroll 0 0;
+    display: block;
+    height: 50px;
+    text-decoration: none;
+    width: 182px;
+}
+
+#header-timer {
+    margin: 3px 0 0 0;
+    padding: 0;
+    width: 300px;
+    height: 97px;
+    float: right;
+    background-color: red;
+    display: none;
+}
+
+#header-timer div {
+    padding: 5px;
+    color: white;
+}
+
+#time-remaining {
+    margin: 10px 10px 10px 10px;
+    font-size: 40px;
+    text-indent: 50px;
+}
+
+#content h1 {
+    font-size: 36pt;
+    text-align: center;
+}
+
+.simple-text-content-content{
+    font-size: 18pt;
+    line-height: 18pt;
+    text-align: justify;
+    margin: 0px 80px 0px 80px;
+}
+
+.simple-text-content-content p{
+    font-size: 18pt;
+    line-height: 18pt;
+    text-align: justify;
+}
+
+
+.multi-choice-question-content {
+    font-size: 24pt;
+    line-height: 24pt;
+    /*text-align: center;*/
+    /*margin: 0px 80px 0px 80px;*/
+}
+
+.multi-choice-question-content p {
+    font-size: 24pt;
+    line-height: 24pt;
+}
+
+.multi-choice-question-choices {
+    font-size: 24pt;
+    text-align: left;
+}
+
+.multi-choice-question-choices label {
+    font-size: 18pt;
+    line-height: 18pt;
+}
+
+.slide-title {
+    line-height: 32pt;
+    font-size: 32pt;
+    text-align: center;
+    margin: 20px 20px 20px 20px;
+    font-weight: bold;
+}
+.multi-choice-question-content img {
+    margin: 20px 20px 20px 20px;
+}
+.slide-img {
+    margin: 20px 20px 20px 20px;
+}
+
+.multi-choice-question-choices-padding {
+    height: 110px;
+}
+
+.multi-choice-question-content-container {
+    
+}
+
+.clear-float {
+    clear: both;
+}
+
+.center {
+    text-align: center;
+}
+.align-left {
+    text-align: left;
+}
+
+.red-text {
+    color: red;
+}
+
+.blue-text {
+    color: blue;
+}
+
+.right {
+    text-align: right;
+}
+
+.easy-text p {
+    font-size: 24pt;
+    line-height: 24pt;
+}
+
+.green-text {
+    color: green;
+}
+
+label.error {
+    color: red;
+    font-size: 24pt;
+    line-height: 24pt;
+}
+
+.hidden {
+    display: none;
+}
+
+.time-limit-alert {
+    font-size: 24px;
+    line-height: 24px;
+    text-align: center;
+}
+
+.chat-box-header {
+    background: rgb(121,44,152);
+    padding: 5px;
+}
+
+.chat-box-header h2 {
+    color: white;
+}
+
+.chat-box-scroll-container{
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 282px;
+    max-height: 282px;
+    position: relative;
+}
+
+.chat-box-table {
+    table-layout: fixed;
+    height: 100%;
+    width: 100%;
+}
+
+.chat-box-outer-container {
+/*    height: 282px;
+    max-height: 282px;
+    width: 290px;*/
+    padding: 5px;
+    vertical-align: bottom;
+    position: relative;
+    bottom: 0;
+}
+
+.chat-entry {
+    padding: 2px;
+}
+
+.chat-box-textarea {
+    position: absolute;
+    margin: 0px;
+    padding: 0px;
+    width: 288px;
+    bottom:0;
+    padding: 5px;
+    height: 50px;
+}
+
+.chat-box {
+    position: fixed;
+    background: white;
+    bottom: 0;
+    height: 400px;
+    width: 300px;
+    border: 1px;
+    border-style: solid;
+    border-bottom-style: none;
+    padding: 0px;
+}
+
+.chat-username {
+    font-weight: bold;
+}
+.chat-entry {
+    font-size: 16pt;
+    line-height: 16pt;
+}
+
+.long-text p {
+    font-size: 14pt;
+    line-height: 14pt;
+}
+
+.text-content  {
+    text-align: center;
+}
+
+.text-content p {
+    font-size: 18pt;
+    line-height: 20pt;
+}
+
+.business-case-question-text {
+    font-size: 14pt;
+    line-height: 14pt;
+}
+
+.business-case-content {
+    text-align: left;
+}
+
+.business-case-content p {
+    font-size: 14pt;
+    line-height: 14pt;
+}
+
+body {
+    margin: 0;
+    padding 0;
+    font-family: "Calibri";
+}
