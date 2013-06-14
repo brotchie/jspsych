@@ -40,7 +40,7 @@ require(["jquery" ,"Condition1",
         $.ExperimentState.config.collaborate = (CONDITION == 1 || CONDITION == 4);
 
         if ($.ExperimentState.DEBUG) {
-          alert('The experiment is currently running in DEBUG mode. Some validation steps will be skipped and the simulate will run at 10x speed. Setting this.DEBUG = false in scripts/State.js will disable this mode.');
+          alert('The experiment is currently running in DEBUG mode. Some validation steps will be skipped and the simulation will run at 10x speed. Setting this.DEBUG = false in scripts/State.js will disable this mode.');
         }
 
 
